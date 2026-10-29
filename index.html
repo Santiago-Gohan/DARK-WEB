@@ -4,327 +4,218 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101513">
-  <title>ImpactMind — Inteligencia empresarial</title>
+  <title>ImpactMind — Análisis empresarial</title>
   <style>
-    :root {
-      color-scheme: dark;
-      --bg: #101513;
-      --panel: #171e1a;
-      --panel-raised: #1d2621;
-      --panel-soft: #141a17;
-      --line: #2a3530;
-      --ink: #eef3ed;
-      --muted: #9aa89e;
-      --faint: #6d7a71;
-      --accent: #b7e36a;
-      --accent-dark: #33451f;
-      --good: #7bd6a4;
-      --warn: #f1c56d;
-      --bad: #ff8274;
-      --blue: #89b9e6;
-      --radius: 14px;
-      --mono: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
-      --sans: "Segoe UI Variable", "Aptos", "Segoe UI", sans-serif;
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.5 var(--sans); }
-    button, input, select { font: inherit; }
-    button { color: inherit; }
-    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-    .app { min-height: 100vh; display: grid; grid-template-columns: 238px minmax(0,1fr); }
-    .sidebar { background: #131916; border-right: 1px solid var(--line); padding: 22px 15px; display: flex; flex-direction: column; gap: 26px; }
-    .brand { display:flex; align-items:center; gap:11px; padding: 0 9px; }
-    .brand-mark { width:34px; height:34px; display:grid; place-items:center; background:var(--accent); color:#14200e; border-radius:10px; font-weight:900; letter-spacing:-.08em; }
-    .brand-name { font-size:15px; font-weight:720; letter-spacing:-.025em; }
-    .brand-sub { font-size:10px; text-transform:uppercase; letter-spacing:.14em; color:var(--faint); margin-top:1px; }
-    .workspace { padding: 13px 11px; border:1px solid var(--line); border-radius:12px; background:var(--panel-soft); }
-    .eyebrow { color:var(--faint); font-size:10px; text-transform:uppercase; letter-spacing:.13em; font-weight:700; }
-    .workspace strong { display:block; margin-top:5px; font-size:12px; font-weight:650; }
-    .nav-group { display:grid; gap:5px; }
-    .nav-label { padding:0 10px 7px; color:var(--faint); text-transform:uppercase; font-size:10px; letter-spacing:.14em; font-weight:700; }
-    .nav-btn { border:0; background:transparent; border-radius:9px; text-align:left; display:flex; align-items:center; gap:11px; padding:10px 11px; color:var(--muted); cursor:pointer; transition:background .16s,color .16s; }
-    .nav-btn:hover { background:var(--panel-raised); color:var(--ink); }
-    .nav-btn.active { color:var(--accent); background:#242e20; }
-    .nav-icon { width:18px; color:currentColor; text-align:center; font-size:15px; }
-    .nav-count { margin-left:auto; font:11px var(--mono); color:var(--faint); }
-    .side-bottom { margin-top:auto; }
-    .demo-note { border:1px solid #5a4b2e; background:#282317; padding:12px; border-radius:11px; color:#dcc99b; font-size:11px; }
-    .demo-note b { display:block; color:#f0d48d; margin-bottom:3px; font-size:11px; }
-    .main { min-width:0; }
-    .topbar { min-height:67px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 30px; position:sticky; top:0; z-index:5; background:rgba(16,21,19,.96); backdrop-filter:blur(10px); }
-    .crumb { display:flex; align-items:center; gap:9px; color:var(--muted); font-size:12px; }
-    .crumb strong { color:var(--ink); font-weight:620; }
-    .top-actions { display:flex; align-items:center; gap:10px; }
-    .live-label { color:var(--good); display:flex; align-items:center; gap:7px; font-size:11px; white-space:nowrap; }
-    .live-dot { width:7px; height:7px; border-radius:50%; background:var(--good); box-shadow:0 0 0 4px #7bd6a41c; }
-    .top-date { color:var(--faint); font-size:11px; }
-    .content { max-width:1500px; margin:auto; padding:28px 30px 50px; }
-    .page-head { display:flex; justify-content:space-between; align-items:flex-end; gap:20px; margin-bottom:23px; }
-    .kicker { color:var(--accent); font-size:10px; font-weight:750; letter-spacing:.15em; text-transform:uppercase; margin-bottom:8px; }
-    h1 { font-size:26px; letter-spacing:-.045em; line-height:1.14; margin:0; font-weight:680; }
-    .page-sub { color:var(--muted); margin:7px 0 0; font-size:12px; }
-    .actions { display:flex; align-items:center; gap:8px; }
-    .btn { border:1px solid var(--line); background:var(--panel); color:var(--ink); border-radius:9px; min-height:37px; padding:8px 12px; display:inline-flex; gap:8px; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:600; transition:.16s ease; white-space:nowrap; }
-    .btn:hover { background:var(--panel-raised); border-color:#48574d; }
-    .btn.primary { border-color:var(--accent); background:var(--accent); color:#172010; }
-    .btn.primary:hover { background:#c9f181; }
-    .btn.subtle { background:transparent; }
-    .btn.small { min-height:30px; padding:5px 9px; font-size:11px; }
-    .panel { background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); }
-    .metric-row { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); border:1px solid var(--line); border-radius:var(--radius); background:var(--panel); margin-bottom:20px; overflow:hidden; }
-    .metric { padding:17px 19px 16px; position:relative; }
-    .metric + .metric { border-left:1px solid var(--line); }
-    .metric-label { color:var(--muted); font-size:11px; }
-    .metric-main { display:flex; align-items:baseline; gap:8px; margin-top:7px; }
-    .metric-value { font:600 27px/1 var(--mono); letter-spacing:-.07em; }
-    .metric-trend { font-size:10px; color:var(--good); }
-    .metric-context { color:var(--faint); font-size:10px; margin-top:8px; }
-    .dashboard-grid { display:grid; grid-template-columns:minmax(0,1.42fr) minmax(290px,.88fr); gap:16px; align-items:start; }
-    .panel-head { padding:16px 18px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:12px; }
-    .panel-title { margin:0; font-size:13px; font-weight:650; letter-spacing:-.015em; }
-    .panel-caption { color:var(--faint); font-size:10px; margin-top:3px; }
-    .panel-body { padding:16px 18px; }
-    .chart-wrap { height:160px; position:relative; }
-    .chart-wrap canvas { width:100%; height:100%; display:block; }
-    .chart-foot { display:flex; justify-content:space-between; color:var(--faint); font:10px var(--mono); padding:5px 2px 0; }
-    .chart-key { display:flex; align-items:center; gap:6px; color:var(--muted); font-size:10px; }
-    .chart-key::before { content:""; width:8px; height:3px; border-radius:4px; background:var(--accent); }
-    .section-gap { margin-top:16px; }
-    .priority-list { display:grid; gap:0; }
-    .priority-row { padding:13px 18px; display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; align-items:center; border-bottom:1px solid #26302b; cursor:pointer; }
-    .priority-row:last-child { border-bottom:0; }
-    .priority-row:hover { background:#1b241e; }
-    .company-name { font-size:12px; font-weight:620; }
-    .company-meta { color:var(--faint); font-size:10px; margin-top:3px; }
-    .priority-right { display:flex; align-items:center; gap:12px; }
-    .score { font:11px var(--mono); color:var(--muted); }
-    .tag { border-radius:5px; padding:4px 7px; border:1px solid transparent; font-size:9px; font-weight:750; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; }
-    .tag.critical { color:var(--bad); background:#ff827412; border-color:#ff82742d; }
-    .tag.high { color:#f1c56d; background:#f1c56d12; border-color:#f1c56d2c; }
-    .tag.medium { color:var(--blue); background:#89b9e612; border-color:#89b9e62c; }
-    .tag.low { color:var(--good); background:#7bd6a412; border-color:#7bd6a42c; }
-    .feed { display:grid; gap:0; }
-    .feed-item { padding:12px 0; display:grid; grid-template-columns:8px 1fr; gap:10px; border-bottom:1px solid #26302b; }
-    .feed-item:last-child { border-bottom:0; padding-bottom:0; }
-    .feed-mark { width:7px; height:7px; margin-top:5px; border-radius:50%; background:var(--warn); }
-    .feed-item:nth-child(2) .feed-mark { background:var(--bad); }
-    .feed-item:nth-child(3) .feed-mark { background:var(--blue); }
-    .feed-text { color:#d4ddd6; font-size:11px; line-height:1.45; }
-    .feed-source { display:block; color:var(--faint); font-size:9px; margin-top:4px; }
-    .table-wrap { overflow-x:auto; }
-    table { width:100%; border-collapse:collapse; min-width:680px; }
-    th { padding:10px 14px; color:var(--faint); font-size:9px; text-align:left; text-transform:uppercase; letter-spacing:.1em; font-weight:700; border-bottom:1px solid var(--line); }
-    td { padding:13px 14px; border-bottom:1px solid #26302b; font-size:11px; color:#d2dbd4; }
-    tbody tr:last-child td { border-bottom:0; }
-    tbody tr:hover { background:#1c241f; }
-    .table-company { color:var(--ink); font-weight:620; }
-    .mono { font-family:var(--mono); }
-    .dim { color:var(--faint); }
-    .view { display:none; }
-    .view.active { display:block; }
-    .split { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr); gap:16px; }
-    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
-    .field { display:grid; gap:6px; }
-    .field.full { grid-column:1/-1; }
-    .field label { color:var(--muted); font-size:10px; font-weight:620; }
-    .field input, .field select, .field textarea { width:100%; border:1px solid var(--line); border-radius:8px; background:#111713; color:var(--ink); padding:10px 11px; outline:0; font-size:12px; }
-    .field textarea { min-height:78px; resize:vertical; }
-    .field input:focus, .field select:focus, .field textarea:focus { border-color:#92b957; box-shadow:0 0 0 3px #b7e36a18; }
-    .range-row { display:grid; grid-template-columns:1fr 35px; align-items:center; gap:10px; }
-    input[type=range] { accent-color:var(--accent); padding:0; }
-    .range-value { font:11px var(--mono); text-align:right; }
-    .classification { padding:17px; border-radius:12px; border:1px solid var(--line); background:#121815; }
-    .class-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
-    .class-score { font:600 27px var(--mono); letter-spacing:-.06em; }
-    .meter { height:5px; border-radius:8px; background:#29332d; margin:13px 0 10px; overflow:hidden; }
-    .meter-fill { height:100%; width:0; border-radius:inherit; background:var(--accent); transition:width .25s; }
-    .class-desc { color:var(--muted); font-size:11px; }
-    .criteria { margin-top:13px; display:grid; gap:7px; }
-    .criterion { display:flex; justify-content:space-between; color:var(--faint); font-size:10px; }
-    .result-layout { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr); gap:16px; }
-    .project-title { font-size:18px; line-height:1.25; letter-spacing:-.03em; margin:8px 0; }
-    .project-desc { color:var(--muted); font-size:12px; max-width:700px; }
-    .outcome-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-top:17px; }
-    .outcome { padding:11px 12px; background:#121815; border:1px solid var(--line); border-radius:9px; }
-    .outcome span { display:block; font-size:9px; color:var(--faint); text-transform:uppercase; letter-spacing:.08em; }
-    .outcome b { display:block; font:12px var(--mono); margin-top:6px; }
-    .steps { list-style:none; padding:0; margin:4px 0 0; counter-reset:phase; }
-    .steps li { counter-increment:phase; position:relative; padding:0 0 17px 34px; color:#d5ded7; font-size:11px; }
-    .steps li::before { content:counter(phase, decimal-leading-zero); position:absolute; left:0; top:0; color:var(--accent); font:10px var(--mono); }
-    .steps li::after { content:""; position:absolute; left:12px; top:19px; bottom:0; width:1px; background:var(--line); }
-    .steps li:last-child::after { display:none; }
-    .steps small { display:block; color:var(--faint); margin-top:3px; font-size:9px; }
-    .empty-state { padding:36px 20px; text-align:center; color:var(--muted); font-size:12px; }
-    .empty-state strong { display:block; color:var(--ink); margin-bottom:5px; }
-    .toast { position:fixed; right:22px; bottom:22px; z-index:20; background:#252f29; border:1px solid #435148; padding:12px 16px; border-radius:10px; box-shadow:0 14px 40px #0006; font-size:12px; animation:rise .2s ease both; }
-    @keyframes rise { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
-    .modal-backdrop { position:fixed; inset:0; background:#080b09c9; z-index:10; display:grid; place-items:center; padding:18px; }
-    .modal { width:min(560px,100%); max-height:90vh; overflow:auto; padding:20px; background:var(--panel); border:1px solid #435047; border-radius:15px; box-shadow:0 24px 80px #0009; }
-    .modal-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:17px; }
-    .modal-head h2 { font-size:17px; margin:0; letter-spacing:-.025em; }
-    .modal-head p { color:var(--muted); font-size:11px; margin:4px 0 0; }
-    .modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:17px; }
-    .hidden { display:none !important; }
-    @media (max-width:1000px) { .app { grid-template-columns:190px minmax(0,1fr); } .content { padding:23px 20px 40px; } .topbar { padding:12px 20px; } .dashboard-grid { grid-template-columns:1fr; } }
-    @media (max-width:700px) {
-      .app { display:block; }
-      .sidebar { position:sticky; top:0; z-index:7; padding:10px 12px; border-right:0; border-bottom:1px solid var(--line); display:flex; flex-direction:row; align-items:center; gap:10px; overflow-x:auto; }
-      .brand { padding:0; flex:0 0 auto; } .brand-mark { width:30px;height:30px; } .brand-sub,.workspace,.side-bottom,.nav-label { display:none; }
-      .nav-group { display:flex; gap:4px; } .nav-btn { padding:8px 10px; white-space:nowrap; font-size:11px; } .nav-icon { display:none; }
-      .topbar { position:static; padding:11px 16px; } .top-date { display:none; } .content { padding:21px 14px 36px; }
-      .page-head { align-items:flex-start; flex-direction:column; } .actions { width:100%; } .actions .btn { flex:1; }
-      .metric-row { grid-template-columns:1fr 1fr; } .metric { padding:13px; } .metric:nth-child(3) { border-left:0; border-top:1px solid var(--line); } .metric:nth-child(4) { border-top:1px solid var(--line); }
-      .metric-value { font-size:23px; } .split,.result-layout { grid-template-columns:1fr; } .form-grid { grid-template-columns:1fr; } .field.full { grid-column:auto; }
-      .outcome-grid { grid-template-columns:1fr; } h1 { font-size:23px; }
-    }
-    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; } }
+    :root{color-scheme:dark;--bg:#101513;--panel:#171e1a;--raised:#1d2621;--soft:#141a17;--line:#2a3530;--ink:#eef3ed;--muted:#9aa89e;--faint:#6d7a71;--accent:#b7e36a;--good:#7bd6a4;--warn:#f1c56d;--bad:#ff8274;--blue:#89b9e6;--radius:14px;--mono:"Cascadia Code","SFMono-Regular",Consolas,monospace;--sans:"Segoe UI Variable","Aptos","Segoe UI",sans-serif}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--sans)}button,input,select,textarea{font:inherit}button{color:inherit}:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+    .app{min-height:100vh;display:grid;grid-template-columns:238px minmax(0,1fr)}.sidebar{background:#131916;border-right:1px solid var(--line);padding:22px 15px;display:flex;flex-direction:column;gap:26px}.brand{display:flex;align-items:center;gap:11px;padding:0 9px}.brand-mark{width:34px;height:34px;display:grid;place-items:center;background:var(--accent);color:#14200e;border-radius:10px;font-weight:900;letter-spacing:-.08em}.brand-name{font-size:15px;font-weight:720;letter-spacing:-.025em}.brand-sub{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--faint);margin-top:1px}.workspace{padding:13px 11px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}.eyebrow{color:var(--faint);font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:700}.workspace strong{display:block;margin-top:5px;font-size:12px;font-weight:650}.nav-group{display:grid;gap:5px}.nav-label{padding:0 10px 7px;color:var(--faint);text-transform:uppercase;font-size:10px;letter-spacing:.14em;font-weight:700}.nav-btn{border:0;background:transparent;border-radius:9px;text-align:left;display:flex;align-items:center;gap:11px;padding:10px 11px;color:var(--muted);cursor:pointer}.nav-btn:hover{background:var(--raised);color:var(--ink)}.nav-btn.active{color:var(--accent);background:#242e20}.nav-icon{width:18px;color:currentColor;text-align:center}.nav-count{margin-left:auto;font:11px var(--mono);color:var(--faint)}.side-bottom{margin-top:auto}.source-note{border:1px solid #5a4b2e;background:#282317;padding:12px;border-radius:11px;color:#dcc99b;font-size:11px}.source-note b{display:block;color:#f0d48d;margin-bottom:3px;font-size:11px}.main{min-width:0}.topbar{min-height:67px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 30px;position:sticky;top:0;z-index:5;background:rgba(16,21,19,.96);backdrop-filter:blur(10px)}.crumb{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:12px}.crumb strong{color:var(--ink);font-weight:620}.top-actions{display:flex;align-items:center;gap:13px}.connection{display:flex;align-items:center;gap:7px;color:var(--warn);font-size:11px;white-space:nowrap}.connection.ok{color:var(--good)}.connection.error{color:var(--bad)}.dot{width:7px;height:7px;border-radius:50%;background:currentColor}.top-date{color:var(--faint);font-size:11px}.content{max-width:1500px;margin:auto;padding:28px 30px 50px}.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:23px}.kicker{color:var(--accent);font-size:10px;font-weight:750;letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px}h1{font-size:26px;letter-spacing:-.045em;line-height:1.14;margin:0;font-weight:680}.page-sub{color:var(--muted);margin:7px 0 0;font-size:12px}.actions{display:flex;align-items:center;gap:8px}.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:9px;min-height:37px;padding:8px 12px;display:inline-flex;gap:8px;align-items:center;justify-content:center;cursor:pointer;font-size:12px;font-weight:600;transition:.16s ease;white-space:nowrap}.btn:hover{background:var(--raised);border-color:#48574d}.btn.primary{border-color:var(--accent);background:var(--accent);color:#172010}.btn.primary:hover{background:#c9f181}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.small{min-height:30px;padding:5px 9px;font-size:11px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}.metric-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);margin-bottom:20px;overflow:hidden}.metric{padding:17px 19px 16px}.metric+.metric{border-left:1px solid var(--line)}.metric-label{color:var(--muted);font-size:11px}.metric-main{display:flex;align-items:baseline;gap:8px;margin-top:7px}.metric-value{font:600 27px/1 var(--mono);letter-spacing:-.07em}.metric-context{color:var(--faint);font-size:10px;margin-top:8px}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:16px;align-items:start}.panel-head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.panel-title{margin:0;font-size:13px;font-weight:650;letter-spacing:-.015em}.panel-caption{color:var(--faint);font-size:10px;margin-top:3px}.panel-body{padding:16px 18px}.section-gap{margin-top:16px}.dim{color:var(--faint)}.mono{font-family:var(--mono)}.view{display:none}.view.active{display:block}.status-line{font-size:11px;color:var(--muted);margin-top:3px}.status-line.error{color:var(--bad)}.status-line.ok{color:var(--good)}.rate-list{display:grid}.rate-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid #26302b}.rate-row:last-child{border:0}.rate-name{font-weight:620;font-size:12px}.rate-code{font:10px var(--mono);color:var(--faint);margin-left:7px}.rate-date{font-size:9px;color:var(--faint);margin-top:2px}.rate-value{font:12px var(--mono);text-align:right}.rate-empty{padding:22px 0;color:var(--muted);font-size:12px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:680px}th{padding:10px 14px;color:var(--faint);font-size:9px;text-align:left;text-transform:uppercase;letter-spacing:.1em;font-weight:700;border-bottom:1px solid var(--line)}td{padding:13px 14px;border-bottom:1px solid #26302b;font-size:11px;color:#d2dbd4}tbody tr:last-child td{border-bottom:0}tbody tr:hover{background:#1c241f}.table-company{color:var(--ink);font-weight:620}.tag{border-radius:5px;padding:4px 7px;border:1px solid transparent;font-size:9px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}.tag.critical{color:var(--bad);background:#ff827412;border-color:#ff82742d}.tag.high{color:#f1c56d;background:#f1c56d12;border-color:#f1c56d2c}.tag.medium{color:var(--blue);background:#89b9e612;border-color:#89b9e62c}.tag.low{color:var(--good);background:#7bd6a412;border-color:#7bd6a42c}.empty-state{padding:30px 22px;text-align:left;color:var(--muted);font-size:12px}.empty-state strong{display:block;color:var(--ink);margin-bottom:5px;font-size:13px}.empty-icon{font-size:19px;color:var(--warn);margin-bottom:8px}.source-block{margin-top:12px;padding:12px;border-radius:9px;background:#111713;border:1px solid var(--line);font:10px/1.7 var(--mono);color:#b7c5ba;overflow:auto}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{color:var(--muted);font-size:10px;font-weight:620}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:#111713;color:var(--ink);padding:10px 11px;outline:0;font-size:12px}.field textarea{min-height:78px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:#92b957;box-shadow:0 0 0 3px #b7e36a18}.result-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);gap:16px}.project-title{font-size:18px;line-height:1.25;letter-spacing:-.03em;margin:8px 0}.project-desc{color:var(--muted);font-size:12px;max-width:700px}.project-meta{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}.project-meta span{padding:7px 9px;border:1px solid var(--line);border-radius:7px;background:#121815;color:var(--muted);font-size:10px}.steps{list-style:none;padding:0;margin:4px 0 0;counter-reset:phase}.steps li{counter-increment:phase;position:relative;padding:0 0 16px 34px;color:#d5ded7;font-size:11px}.steps li::before{content:counter(phase,decimal-leading-zero);position:absolute;left:0;top:0;color:var(--accent);font:10px var(--mono)}.steps li::after{content:"";position:absolute;left:12px;top:19px;bottom:0;width:1px;background:var(--line)}.steps li:last-child::after{display:none}.steps small{display:block;color:var(--faint);margin-top:3px;font-size:9px}.feed{display:grid}.feed-item{padding:11px 0;border-bottom:1px solid #26302b;font-size:11px;color:#d4ddd6}.feed-item:last-child{border-bottom:0}.feed-item small{display:block;color:var(--faint);font-size:9px;margin-top:4px}.toast{position:fixed;right:22px;bottom:22px;z-index:20;background:#252f29;border:1px solid #435148;padding:12px 16px;border-radius:10px;box-shadow:0 14px 40px #0006;font-size:12px}.hidden{display:none!important}
+    @media(max-width:1000px){.app{grid-template-columns:190px minmax(0,1fr)}.content{padding:23px 20px 40px}.topbar{padding:12px 20px}.dashboard-grid{grid-template-columns:1fr}}
+    @media(max-width:700px){.app{display:block}.sidebar{position:sticky;top:0;z-index:7;padding:10px 12px;border-right:0;border-bottom:1px solid var(--line);display:flex;flex-direction:row;align-items:center;gap:10px;overflow-x:auto}.brand{padding:0;flex:0 0 auto}.brand-mark{width:30px;height:30px}.brand-sub,.workspace,.side-bottom,.nav-label{display:none}.nav-group{display:flex;gap:4px}.nav-btn{padding:8px 10px;white-space:nowrap;font-size:11px}.nav-icon{display:none}.topbar{position:static;padding:11px 16px}.top-date{display:none}.content{padding:21px 14px 36px}.page-head{align-items:flex-start;flex-direction:column}.actions{width:100%}.actions .btn{flex:1}.metric-row{grid-template-columns:1fr 1fr}.metric{padding:13px}.metric:nth-child(3){border-left:0;border-top:1px solid var(--line)}.metric:nth-child(4){border-top:1px solid var(--line)}.metric-value{font-size:23px}.result-layout,.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}h1{font-size:23px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
   </style>
+  <script src="config.js"></script>
 </head>
 <body>
   <div class="app">
     <aside class="sidebar" aria-label="Navegación principal">
       <div class="brand"><div class="brand-mark" aria-hidden="true">IM</div><div><div class="brand-name">ImpactMind</div><div class="brand-sub">Business intelligence</div></div></div>
-      <div class="workspace"><div class="eyebrow">Espacio de trabajo</div><strong>Portafolio corporativo <span class="dim">⌄</span></strong></div>
+      <div class="workspace"><div class="eyebrow">Espacio de trabajo</div><strong>Portafolio corporativo</strong></div>
       <nav class="nav-group" aria-label="Secciones">
         <div class="nav-label">Análisis</div>
         <button class="nav-btn active" data-view="overview"><span class="nav-icon">▦</span>Resumen</button>
         <button class="nav-btn" data-view="companies"><span class="nav-icon">◫</span>Empresas<span class="nav-count" id="company-count-nav">—</span></button>
         <button class="nav-btn" data-view="analysis"><span class="nav-icon">⌁</span>Evaluar necesidad</button>
-        <button class="nav-btn" data-view="projects"><span class="nav-icon">▤</span>Proyectos<span class="nav-count" id="project-count-nav">0</span></button>
+        <button class="nav-btn" data-view="projects"><span class="nav-icon">▤</span>Proyectos<span class="nav-count" id="project-count-nav">—</span></button>
       </nav>
-      <div class="side-bottom"><div class="demo-note"><b>Entorno de demostración</b>Los indicadores y eventos son simulados. No hay conexión real a ERP, CRM ni sensores.</div></div>
+      <div class="side-bottom"><div class="source-note"><b>Fuentes de datos</b><span id="sidebar-source">Cargando estado de conexión…</span></div></div>
     </aside>
     <main class="main">
-      <header class="topbar"><div class="crumb"><span>ImpactMind</span><span class="dim">/</span><strong id="crumb-current">Resumen ejecutivo</strong></div><div class="top-actions"><span class="live-label"><span class="live-dot"></span>Simulación activa</span><span class="top-date" id="today"></span></div></header>
+      <header class="topbar"><div class="crumb"><span>ImpactMind</span><span class="dim">/</span><strong id="crumb-current">Resumen ejecutivo</strong></div><div class="top-actions"><span class="connection" id="connection-status"><span class="dot"></span><span id="connection-label">Comprobando base de datos</span></span><span class="top-date" id="updated-at">—</span></div></header>
       <div class="content">
         <section class="view active" id="view-overview">
-          <div class="page-head"><div><div class="kicker">Inteligencia empresarial · Demo</div><h1>Resumen ejecutivo</h1><p class="page-sub">Identifica dónde actuar primero y lleva cada señal hasta un plan implementable.</p></div><div class="actions"><button class="btn" id="add-company-top">＋ Añadir empresa</button><button class="btn primary" data-go="analysis">Evaluar una necesidad <span aria-hidden="true">→</span></button></div></div>
-          <div class="metric-row" aria-label="Indicadores de portafolio">
-            <div class="metric"><div class="metric-label">Empresas evaluadas</div><div class="metric-main"><span class="metric-value" id="metric-companies">0</span><span class="metric-trend">portafolio</span></div><div class="metric-context">Perfiles cargados en esta demo</div></div>
-            <div class="metric"><div class="metric-label">Necesidad crítica</div><div class="metric-main"><span class="metric-value" id="metric-critical">0</span><span class="metric-trend" style="color:var(--bad)">atención prioritaria</span></div><div class="metric-context">Clasificación según impacto y urgencia</div></div>
-            <div class="metric"><div class="metric-label">Planes de proyecto</div><div class="metric-main"><span class="metric-value" id="metric-projects">0</span><span class="metric-trend">estructurados</span></div><div class="metric-context">Propuestas generadas localmente</div></div>
-            <div class="metric"><div class="metric-label">Preparación promedio</div><div class="metric-main"><span class="metric-value" id="metric-readiness">—</span><span class="metric-trend">estimación</span></div><div class="metric-context">Dato de ejemplo, no auditoría real</div></div>
+          <div class="page-head"><div><div class="kicker">Análisis empresarial · datos conectados</div><h1>Resumen ejecutivo</h1><p class="page-sub">Indicadores del backend y señales cambiarias publicadas por bancos centrales.</p></div><div class="actions"><button class="btn" id="refresh-all">↻ Actualizar datos</button><button class="btn primary" data-go="analysis">Evaluar necesidad →</button></div></div>
+          <div class="metric-row" aria-label="Indicadores del portafolio">
+            <div class="metric"><div class="metric-label">Empresas en base</div><div class="metric-main"><span class="metric-value" id="metric-companies">—</span></div><div class="metric-context" id="metric-companies-note">Esperando respuesta del backend</div></div>
+            <div class="metric"><div class="metric-label">Necesidades críticas</div><div class="metric-main"><span class="metric-value" id="metric-critical">—</span></div><div class="metric-context">Calculadas por el servicio de análisis</div></div>
+            <div class="metric"><div class="metric-label">Proyectos registrados</div><div class="metric-main"><span class="metric-value" id="metric-projects">—</span></div><div class="metric-context">Leídos desde la base conectada</div></div>
+            <div class="metric"><div class="metric-label">Última sincronización</div><div class="metric-main"><span class="metric-value" id="metric-updated" style="font-size:16px">—</span></div><div class="metric-context">Hora reportada por el backend</div></div>
           </div>
           <div class="dashboard-grid">
+            <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Tipo de cambio del dólar</h2><div class="panel-caption">Cotizaciones publicadas más recientes · actualización diaria, no intradía</div></div><button class="btn small" id="refresh-rates">Actualizar</button></div><div class="panel-body"><div class="status-line" id="fx-status">Consultando fuente externa…</div><div class="rate-list" id="rates-list"><div class="rate-empty">Cargando cotizaciones verificables…</div></div><div class="panel-caption" style="margin-top:12px">Fuente: <a href="https://frankfurter.dev/" target="_blank" rel="noreferrer" style="color:var(--accent)">Frankfurter API</a>, agregador de tasas publicadas por bancos centrales. Cada moneda puede traer su propia fecha de publicación.</div></div></article>
             <div>
-              <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Señales operativas recientes</h2><div class="panel-caption">Serie simulada · no representa telemetría en vivo</div></div><span class="chart-key">Eventos detectados</span></div><div class="panel-body"><div class="chart-wrap"><canvas id="trend-chart" aria-label="Gráfico simulado de señales operativas"></canvas></div><div class="chart-foot"><span>08:00</span><span>10:00</span><span>12:00</span><span>14:00</span><span>16:00</span></div></div></article>
-              <article class="panel section-gap"><div class="panel-head"><div><h2 class="panel-title">Empresas que requieren atención</h2><div class="panel-caption">Ordenadas por puntuación de necesidad</div></div><button class="btn small subtle" data-go="companies">Ver todas →</button></div><div class="priority-list" id="priority-list"></div></article>
+              <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Datos empresariales</h2><div class="panel-caption">La web no inventa empresas ni métricas</div></div></div><div class="panel-body" id="sourceUnavailable"><div class="empty-icon">◇</div><div class="empty-state" style="padding:0"><strong>Conecta tu base de datos</strong>El repositorio todavía no tiene un backend. Cuando lo despliegues, la página consultará sus endpoints y mostrará únicamente datos reales.</div><div class="source-block">GET /api/analytics/summary<br>GET /api/companies<br>GET /api/projects</div><p class="panel-caption" style="margin-top:12px">No se habilita el análisis ni la generación de proyectos hasta recibir datos de una empresa desde el backend.</p></div><div class="panel-body hidden" id="sourceConnected"><div class="feed" id="business-signals"></div></div></article>
+              <article class="panel section-gap"><div class="panel-head"><div><h2 class="panel-title">Proceso de decisión</h2><div class="panel-caption">Con datos, no con métricas de ejemplo</div></div></div><div class="panel-body"><div class="feed"><div class="feed-item">01 · Leer ventas, inventario, costos y operaciones desde tu API.<small>La base conserva la fuente de verdad.</small></div><div class="feed-item">02 · Calcular prioridad y explicar evidencia.<small>El servicio devuelve la clasificación y los datos que la respaldan.</small></div><div class="feed-item">03 · Preparar un proyecto revisable.<small>Guardar y ejecutar cambios son acciones separadas; no se ejecutan automáticamente.</small></div></div></div></article>
             </div>
-            <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Señales del portafolio</h2><div class="panel-caption">Hallazgos de demostración</div></div><span class="tag medium">MUESTRA</span></div><div class="panel-body"><div class="feed" id="signal-feed"></div></div></article>
           </div>
         </section>
 
         <section class="view" id="view-companies">
-          <div class="page-head"><div><div class="kicker">Portafolio</div><h1>Empresas</h1><p class="page-sub">Perfiles y necesidades clasificadas para priorizar el siguiente paso.</p></div><div class="actions"><button class="btn primary" id="add-company-list">＋ Añadir empresa</button></div></div>
-          <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Directorio de empresas</h2><div class="panel-caption">Selecciona una empresa para preparar su evaluación</div></div><input id="company-search" class="btn" type="search" placeholder="Buscar empresa o sector…" aria-label="Buscar empresas"></div><div class="table-wrap"><table><thead><tr><th>Empresa</th><th>Sector</th><th>Necesidad</th><th>Puntuación</th><th>Última revisión</th><th></th></tr></thead><tbody id="companies-table"></tbody></table></div></article>
+          <div class="page-head"><div><div class="kicker">Datos desde tu backend</div><h1>Empresas</h1><p class="page-sub">Directorio obtenido de la API de tu aplicación, sin perfiles precargados.</p></div><div class="actions"><button class="btn" id="refresh-companies">↻ Actualizar</button></div></div>
+          <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Directorio conectado</h2><div class="panel-caption" id="companies-caption">Consultando /api/companies</div></div><input id="company-search" class="btn" type="search" placeholder="Buscar empresa…" aria-label="Buscar empresas"></div><div class="table-wrap"><table><thead><tr><th>Empresa</th><th>Sector</th><th>Necesidad</th><th>Puntuación</th><th>Actualizado</th><th></th></tr></thead><tbody id="companies-table"><tr><td colspan="6" class="dim">Cargando desde el backend…</td></tr></tbody></table></div></article>
         </section>
 
         <section class="view" id="view-analysis">
-          <div class="page-head"><div><div class="kicker">Etapa 1 · Diagnóstico</div><h1>Evaluar necesidad</h1><p class="page-sub">Registra señales operativas para clasificar la prioridad y diseñar una intervención concreta.</p></div><div class="actions"><span class="tag medium">MOTOR DE REGLAS · DEMO</span></div></div>
-          <div class="split">
-            <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Contexto de la empresa</h2><div class="panel-caption">Los valores se guardan en este navegador</div></div></div><div class="panel-body">
-              <form id="analysis-form"><div class="form-grid">
-                <div class="field"><label for="company-select">Empresa</label><select id="company-select" required></select></div>
-                <div class="field"><label for="sector-select">Área del problema</label><select id="sector-select"><option value="supply">Cadena de suministro</option><option value="operations">Operaciones y manufactura</option><option value="finance">Finanzas y cobranza</option><option value="retention">Retención de clientes</option><option value="digital">Procesos digitales / TI</option></select></div>
-                <div class="field full"><label for="problem-input">Problema observado</label><textarea id="problem-input" placeholder="Ej.: quiebres frecuentes de inventario y reposición manual…"></textarea></div>
-                <div class="field"><label for="severity-range">Severidad para la operación</label><div class="range-row"><input id="severity-range" type="range" min="1" max="10" value="7"><span class="range-value" id="severity-value">7/10</span></div></div>
-                <div class="field"><label for="impact-range">Impacto económico estimado</label><div class="range-row"><input id="impact-range" type="range" min="1" max="10" value="7"><span class="range-value" id="impact-value">7/10</span></div></div>
-                <div class="field"><label for="reach-range">Procesos / sedes afectados</label><div class="range-row"><input id="reach-range" type="range" min="1" max="10" value="5"><span class="range-value" id="reach-value">5/10</span></div></div>
-                <div class="field"><label for="readiness-range">Preparación para implementar</label><div class="range-row"><input id="readiness-range" type="range" min="1" max="10" value="6"><span class="range-value" id="readiness-value">6/10</span></div></div>
-                <div class="field full"><button type="submit" class="btn primary">Clasificar y preparar proyecto <span aria-hidden="true">→</span></button></div>
-              </div></form>
-            </div></article>
-            <div>
-              <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Clasificación de necesidad</h2><div class="panel-caption">Puntuación indicativa, no auditoría técnica</div></div></div><div class="panel-body"><div class="classification"><div class="class-top"><div><div class="eyebrow">Prioridad</div><div id="classification-label" style="margin-top:6px"><span class="tag high">Alta</span></div></div><div class="class-score"><span id="classification-score">68</span><span class="dim" style="font-size:12px">/100</span></div></div><div class="meter"><div class="meter-fill" id="classification-meter"></div></div><div class="class-desc" id="classification-desc">Conviene validar alcance y preparar un plan de intervención en el corto plazo.</div><div class="criteria"><div class="criterion"><span>Severidad + impacto</span><span id="criteria-business">—</span></div><div class="criterion"><span>Alcance operativo</span><span id="criteria-reach">—</span></div><div class="criterion"><span>Preparación</span><span id="criteria-ready">—</span></div></div></div></div></article>
-              <article class="panel section-gap"><div class="panel-head"><div><h2 class="panel-title">Qué significa la prioridad</h2><div class="panel-caption">Umbrales transparentes y editables</div></div></div><div class="panel-body"><div class="feed"><div class="feed-item"><span class="tag critical">Crítica</span><div class="feed-text">80–100 · iniciar validación ejecutiva inmediata.</div></div><div class="feed-item"><span class="tag high">Alta</span><div class="feed-text">65–79 · definir responsable, alcance y caso de negocio.</div></div><div class="feed-item"><span class="tag medium">Media</span><div class="feed-text">45–64 · priorizar datos y preparar piloto.</div></div><div class="feed-item"><span class="tag low">Baja</span><div class="feed-text">0–44 · monitorear o resolver con mejora puntual.</div></div></div></div></article>
-            </div>
+          <div class="page-head"><div><div class="kicker">Etapa 1 · Diagnóstico</div><h1>Evaluar necesidad</h1><p class="page-sub">El servidor analiza los datos reales de la empresa seleccionada y devuelve evidencia.</p></div><div class="actions"><span class="tag medium">REQUIERE BACKEND</span></div></div>
+          <div class="dashboard-grid">
+            <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Contexto de evaluación</h2><div class="panel-caption">No se envían credenciales de base de datos desde el navegador</div></div></div><div class="panel-body"><form id="analysis-form"><div class="form-grid"><div class="field full"><label for="company-select">Empresa desde la base</label><select id="company-select" required disabled><option value="">Conecta tu base de datos primero</option></select></div><div class="field full"><label for="problem-input">Pregunta de negocio</label><textarea id="problem-input" placeholder="Ej.: identifica las causas principales del aumento de costos logísticos usando los datos recientes…" required></textarea></div><div class="field full"><button id="run-analysis" type="submit" class="btn primary" disabled>Analizar con datos reales →</button></div></div></form><p class="panel-caption" id="analysis-help" style="margin-top:14px">El análisis se habilitará cuando GET /api/companies devuelva empresas reales.</p></div></article>
+            <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Resultado del análisis</h2><div class="panel-caption">Se mostrarán puntuación, clasificación y evidencia devuelta por el servicio.</div></div></div><div class="panel-body" id="analysis-result"><div class="empty-state"><strong>Aún no hay un análisis</strong>Conecta la base, selecciona una empresa y envía una pregunta concreta.</div></div></article>
           </div>
         </section>
 
         <section class="view" id="view-projects">
-          <div class="page-head"><div><div class="kicker">Etapa 2 · Implementación</div><h1>Proyectos estructurados</h1><p class="page-sub">Cada proyecto convierte un diagnóstico en entregables, integraciones, fases e indicadores.</p></div><div class="actions"><button class="btn" id="export-all">Exportar portafolio JSON</button><button class="btn primary" data-go="analysis">＋ Generar proyecto</button></div></div>
-          <div id="projects-content"></div>
+          <div class="page-head"><div><div class="kicker">Etapa 2 · Implementación</div><h1>Proyectos</h1><p class="page-sub">Planes leídos de la base de datos; ejecutar requiere una acción aprobada en tu backend.</p></div><div class="actions"><button class="btn" id="refresh-projects">↻ Actualizar</button></div></div>
+          <div id="projects-content"><article class="panel"><div class="empty-state"><strong>Esperando conexión con la base de datos</strong>Los proyectos aparecerán aquí cuando GET /api/projects responda.</div></article></div>
         </section>
       </div>
     </main>
   </div>
-  <div id="overlay-root"></div>
   <div id="toast-root" aria-live="polite"></div>
-
   <script>
-    const seedCompanies = [
-      {id:'c1',name:'NorteLogística',sector:'Transporte y logística',issue:'Entregas tardías y baja visibilidad de inventario',severity:9,impact:8,reach:8,readiness:6,review:'Hoy'},
-      {id:'c2',name:'Alimentos del Valle',sector:'Manufactura alimentaria',issue:'Paradas no planificadas en línea de envasado',severity:8,impact:9,reach:6,readiness:5,review:'Hoy'},
-      {id:'c3',name:'Financiera Horizonte',sector:'Servicios financieros',issue:'Aumento en días de cuentas por cobrar',severity:6,impact:7,reach:5,readiness:8,review:'Ayer'},
-      {id:'c4',name:'Nexo Industrial',sector:'Manufactura',issue:'Variabilidad en consumo energético',severity:5,impact:6,reach:6,readiness:7,review:'Hace 3 días'}
-    ];
-    const sectorConfig = {
-      supply:{label:'Cadena de suministro',title:'Control predictivo de inventario y reposición',objective:'Reducir quiebres y sobreinventario mediante visibilidad de existencias, previsión de demanda y reglas de reposición entre ubicaciones.',integrations:['ERP / WMS de inventarios','Órdenes de compra y proveedores','Panel de existencias por sede'],kpis:['Quiebres de stock','Rotación y días de inventario','Tiempo de reposición'],phases:[['Descubrimiento y calidad de datos','Mapear fuentes, responsables y reglas de inventario.'],['Piloto de visibilidad','Unificar existencias y alertas en 1–2 ubicaciones.'],['Reglas predictivas','Probar previsión y recomendaciones con supervisión humana.'],['Despliegue y mejora','Extender sedes, medir resultados y ajustar umbrales.']],duration:'8–12 semanas'},
-      operations:{label:'Operaciones y manufactura',title:'Monitoreo de activos y mantenimiento basado en condición',objective:'Consolidar señales de paradas, producción y consumo para encontrar pérdidas operativas y priorizar intervenciones con el equipo de planta.',integrations:['MES / ERP de producción','Historial de mantenimiento','Sensores / SCADA (si existen)'],kpis:['Horas de parada no planificada','Eficiencia de línea (OEE)','Consumo por unidad producida'],phases:[['Línea base operativa','Acordar activos críticos, definiciones y datos disponibles.'],['Instrumentación y captura','Integrar señales existentes; validar frecuencia y calidad.'],['Piloto de alertas','Probar alertas con mantenimiento y responsables de línea.'],['Escalamiento','Extender activos y revisar impacto de forma periódica.']],duration:'10–16 semanas'},
-      finance:{label:'Finanzas y cobranza',title:'Priorización de cobranza y previsión de caja',objective:'Organizar cuentas por riesgo y antigüedad, priorizar acciones de cobranza y mejorar la visibilidad de entradas de efectivo.',integrations:['ERP contable / cuentas por cobrar','CRM o historial de contacto','Pasarela / conciliación (si aplica)'],kpis:['DSO / días de cobro','Cartera vencida por antigüedad','Promesas de pago cumplidas'],phases:[['Diagnóstico de cartera','Revisar segmentación, políticas y calidad del histórico.'],['Diseño de reglas','Definir alertas y prioridad con el equipo financiero.'],['Piloto de seguimiento','Probar una cartera acotada y medir respuesta.'],['Despliegue y control','Integrar el flujo aprobado y monitorear resultados.']],duration:'6–10 semanas'},
-      retention:{label:'Retención de clientes',title:'Sistema de alertas tempranas de riesgo de abandono',objective:'Combinar señales de uso, soporte y renovación para identificar cuentas en riesgo y guiar acciones de retención del equipo comercial.',integrations:['CRM y contratos','Uso del producto / actividad','Tickets y encuestas de soporte'],kpis:['Retención / renovación','Cuentas en riesgo atendidas','Tiempo hasta primera intervención'],phases:[['Acordar señales de riesgo','Definir indicadores con ventas, soporte y éxito del cliente.'],['Unificar información','Relacionar CRM, uso y soporte con permisos adecuados.'],['Piloto de priorización','Revisar alertas con ejecutivos y medir utilidad.'],['Operación continua','Integrar seguimiento, responsables y revisión del modelo.']],duration:'8–12 semanas'},
-      digital:{label:'Procesos digitales / TI',title:'Mapa de fricción y automatización de procesos',objective:'Identificar tareas repetitivas, tiempos de espera y errores en flujos internos; priorizar automatizaciones con revisión humana.',integrations:['Sistemas internos / APIs','Registros de procesos','Gestor de tickets o aprobaciones'],kpis:['Tiempo de ciclo','Tasa de retrabajo','Tareas automatizadas con control'],phases:[['Mapeo del proceso','Documentar pasos, excepciones y responsables.'],['Selección de oportunidad','Valorar volumen, riesgo y viabilidad de automatización.'],['Prototipo controlado','Probar con usuarios y datos no sensibles.'],['Despliegue seguro','Aprobar controles, permisos y seguimiento.']],duration:'4–8 semanas'}
-    };
-    const storedCompanies = safeRead('impactmind-companies');
-    let companies = Array.isArray(storedCompanies) && storedCompanies.length ? storedCompanies : seedCompanies;
-    let projects = safeRead('impactmind-projects') || [];
-    let selectedCompanyId = companies[0]?.id || '';
-    const $ = (s,root=document)=>root.querySelector(s);
-    const $$ = (s,root=document)=>[...root.querySelectorAll(s)];
-    function safeRead(key){ try{return JSON.parse(localStorage.getItem(key)||'null')}catch{return null} }
-    function persist(){ localStorage.setItem('impactmind-companies',JSON.stringify(companies)); localStorage.setItem('impactmind-projects',JSON.stringify(projects)); }
-    function scoreNeed(c){ return Math.max(0,Math.min(100,Math.round(c.severity*3.5+c.impact*3+c.reach*2+(11-c.readiness)*1.5))); }
-    function band(score){ if(score>=80)return {name:'Crítica',key:'critical',desc:'Requiere validación ejecutiva inmediata y definición de un responsable.'}; if(score>=65)return {name:'Alta',key:'high',desc:'Conviene definir responsable, alcance y caso de negocio a corto plazo.'}; if(score>=45)return {name:'Media',key:'medium',desc:'Prioriza validar datos y preparar un piloto acotado.'}; return {name:'Baja',key:'low',desc:'Monitorea la señal o resuélvela con una mejora puntual.'}; }
-    function tagFor(c){const b=band(scoreNeed(c));return `<span class="tag ${b.key}">${b.name}</span>`;}
-    function escapeHTML(s){return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
-    function toast(msg){const root=$('#toast-root');root.innerHTML=`<div class="toast">${escapeHTML(msg)}</div>`;setTimeout(()=>root.innerHTML='',2800);}
-    function setView(name){$$('.view').forEach(v=>v.classList.toggle('active',v.id===`view-${name}`));$$('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===name));const labels={overview:'Resumen ejecutivo',companies:'Empresas',analysis:'Evaluar necesidad',projects:'Proyectos estructurados'};$('#crumb-current').textContent=labels[name]||'Resumen ejecutivo';if(name==='analysis')updateClassification();if(name==='projects')renderProjects();}
-    $$('[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
-    $$('[data-go]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.go)));
-    function renderOverview(){
-      const sorted=[...companies].sort((a,b)=>scoreNeed(b)-scoreNeed(a));
-      $('#metric-companies').textContent=companies.length;
-      $('#metric-critical').textContent=companies.filter(c=>scoreNeed(c)>=80).length;
-      $('#metric-projects').textContent=projects.length;
-      $('#metric-readiness').textContent=companies.length?`${Math.round(companies.reduce((s,c)=>s+c.readiness,0)/companies.length*10)}%`:'—';
-      $('#company-count-nav').textContent=companies.length;
-      $('#project-count-nav').textContent=projects.length;
-      $('#priority-list').innerHTML=sorted.slice(0,4).map(c=>`<div class="priority-row" data-open-company="${escapeHTML(c.id)}"><div><div class="company-name">${escapeHTML(c.name)}</div><div class="company-meta">${escapeHTML(c.issue||c.sector)}</div></div><div class="priority-right">${tagFor(c)}<span class="score">${scoreNeed(c)}</span></div></div>`).join('')||'<div class="empty-state">Aún no hay empresas.</div>';
-      $$('.priority-row[data-open-company]').forEach(row=>row.addEventListener('click',()=>selectForAnalysis(row.dataset.openCompany)));
-      const events=[
-        `${sorted[0]?.name||'Portafolio'} · prioridad ${sorted[0]?band(scoreNeed(sorted[0])).name.toLowerCase():'sin datos'} según impacto y urgencia`,
-        `${companies.filter(c=>c.readiness<=5).length} empresa(s) con preparación inicial: conviene validar calidad y acceso a datos`,
-        `${projects.length} plan(es) de implementación guardado(s) en este navegador`
-      ];
-      $('#signal-feed').innerHTML=events.map((t,i)=>`<div class="feed-item"><span class="feed-mark"></span><div class="feed-text">${escapeHTML(t)}<span class="feed-source">${['MOTOR DE PRIORIDAD','PREPARACIÓN','IMPLEMENTACIÓN'][i]} · DEMO</span></div></div>`).join('');
-      drawChart();renderCompanies();renderSelect();
-    }
-    function renderCompanies(filter=''){
-      const q=filter.trim().toLowerCase();const rows=companies.filter(c=>`${c.name} ${c.sector} ${c.issue||''}`.toLowerCase().includes(q)).sort((a,b)=>scoreNeed(b)-scoreNeed(a));
-      $('#companies-table').innerHTML=rows.length?rows.map(c=>`<tr><td><span class="table-company">${escapeHTML(c.name)}</span><div class="dim" style="font-size:9px;margin-top:3px">${escapeHTML(c.issue||'Sin problema descrito')}</div></td><td>${escapeHTML(c.sector)}</td><td>${tagFor(c)}</td><td class="mono">${scoreNeed(c)}<span class="dim">/100</span></td><td class="dim">${escapeHTML(c.review||'Nueva')}</td><td><button class="btn small" data-evaluate="${escapeHTML(c.id)}">Evaluar →</button></td></tr>`).join(''):`<tr><td colspan="6"><div class="empty-state"><strong>Sin resultados</strong>Ajusta la búsqueda o agrega una empresa.</div></td></tr>`;
-      $$('[data-evaluate]').forEach(b=>b.addEventListener('click',()=>selectForAnalysis(b.dataset.evaluate)));
-    }
-    function renderSelect(){const sel=$('#company-select');const keep=selectedCompanyId;sel.innerHTML=companies.map(c=>`<option value="${escapeHTML(c.id)}">${escapeHTML(c.name)}</option>`).join('')||'<option value="">Agrega una empresa primero</option>';if(companies.some(c=>c.id===keep))sel.value=keep;selectedCompanyId=sel.value;}
-    function selectForAnalysis(id){selectedCompanyId=id;renderSelect();const c=companies.find(x=>x.id===id);if(c){$('#problem-input').value=c.issue||'';$('#severity-range').value=c.severity;$('#impact-range').value=c.impact;$('#reach-range').value=c.reach;$('#readiness-range').value=c.readiness;$('#sector-select').value=sectorFromCompany(c);}syncRanges();setView('analysis');}
-    function sectorFromCompany(c){const s=(c.sector+' '+(c.issue||'')).toLowerCase();if(/log|invent|stock|supply|transpor/.test(s))return'supply';if(/manufact|planta|energ|operaci/.test(s))return'operations';if(/finan|cobran|cartera|pago/.test(s))return'finance';if(/cliente|retenc|churn|comercial/.test(s))return'retention';return'digital';}
-    function syncRanges(){['severity','impact','reach','readiness'].forEach(n=>{$(`#${n}-value`).textContent=`${$(`#${n}-range`).value}/10`;});updateClassification();}
-    ['severity','impact','reach','readiness'].forEach(n=>$(`#${n}-range`).addEventListener('input',syncRanges));
-    $('#company-select').addEventListener('change',e=>{selectedCompanyId=e.target.value;const c=companies.find(x=>x.id===selectedCompanyId);if(c){$('#problem-input').value=c.issue||'';$('#sector-select').value=sectorFromCompany(c);$('#severity-range').value=c.severity;$('#impact-range').value=c.impact;$('#reach-range').value=c.reach;$('#readiness-range').value=c.readiness;syncRanges();}});
-    function currentAssessment(){return {severity:+$('#severity-range').value,impact:+$('#impact-range').value,reach:+$('#reach-range').value,readiness:+$('#readiness-range').value};}
-    function updateClassification(){const a=currentAssessment();const n=scoreNeed(a);const b=band(n);$('#classification-score').textContent=n;$('#classification-label').innerHTML=`<span class="tag ${b.key}">${b.name}</span>`;$('#classification-desc').textContent=b.desc;$('#classification-meter').style.width=`${n}%`;$('#criteria-business').textContent=`${Math.round(a.severity*50+a.impact*50)}%`;$('#criteria-reach').textContent=`${a.reach*10}%`;$('#criteria-ready').textContent=`${a.readiness*10}%`;}
-    $('#analysis-form').addEventListener('submit',e=>{e.preventDefault();const c=companies.find(x=>x.id===$('#company-select').value);if(!c){toast('Agrega una empresa para iniciar la evaluación.');return;}const a=currentAssessment();Object.assign(c,a,{issue:$('#problem-input').value.trim()||c.issue,review:'Ahora'});selectedCompanyId=c.id;const cfg=sectorConfig[$('#sector-select').value];const priority=band(scoreNeed(c));const project={id:`p${Date.now()}`,companyId:c.id,company:c.name,sector:cfg.label,priority:priority.name,score:scoreNeed(c),problem:c.issue,title:cfg.title,objective:cfg.objective,integrations:cfg.integrations,kpis:cfg.kpis,phases:cfg.phases,duration:cfg.duration,readiness:a.readiness,createdAt:new Date().toISOString(),status:'Propuesta · pendiente de validación'};projects.unshift(project);persist();renderOverview();renderProjects();setView('projects');toast('Evaluación guardada y plan estructurado.');});
-    $('#company-search').addEventListener('input',e=>renderCompanies(e.target.value));
-    function showCompanyModal(){const root=$('#overlay-root');root.innerHTML=`<div class="modal-backdrop" id="modal-backdrop"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-head"><div><h2 id="modal-title">Añadir empresa</h2><p>Crea un perfil de trabajo local para su evaluación.</p></div><button class="btn small" id="close-modal" aria-label="Cerrar">✕</button></div><form id="new-company-form"><div class="form-grid"><div class="field"><label for="new-name">Nombre de empresa</label><input id="new-name" required maxlength="80" placeholder="Ej.: Empresa del Norte"></div><div class="field"><label for="new-sector">Sector</label><input id="new-sector" required maxlength="80" placeholder="Ej.: Logística"></div><div class="field full"><label for="new-issue">Necesidad u oportunidad observada</label><textarea id="new-issue" maxlength="400" placeholder="Describe brevemente el problema"></textarea></div><div class="field"><label for="new-severity">Severidad inicial (1–10)</label><input id="new-severity" type="number" min="1" max="10" value="5" required></div><div class="field"><label for="new-impact">Impacto inicial (1–10)</label><input id="new-impact" type="number" min="1" max="10" value="5" required></div></div><div class="modal-actions"><button type="button" class="btn" id="cancel-modal">Cancelar</button><button class="btn primary" type="submit">Guardar empresa</button></div></form></section></div>`;
-      const close=()=>root.innerHTML='';$('#close-modal').onclick=close;$('#cancel-modal').onclick=close;$('#modal-backdrop').addEventListener('click',e=>{if(e.target.id==='modal-backdrop')close();});$('#new-company-form').addEventListener('submit',e=>{e.preventDefault();const company={id:`c${Date.now()}`,name:$('#new-name').value.trim(),sector:$('#new-sector').value.trim(),issue:$('#new-issue').value.trim()||'Necesidad pendiente de diagnóstico',severity:+$('#new-severity').value,impact:+$('#new-impact').value,reach:5,readiness:5,review:'Nueva'};companies.unshift(company);selectedCompanyId=company.id;persist();close();renderOverview();selectForAnalysis(company.id);toast('Empresa agregada. Completa su evaluación.');});$('#new-name').focus();}
-    ['add-company-top','add-company-list'].forEach(id=>document.getElementById(id).addEventListener('click',showCompanyModal));
-    function renderProjects(){const root=$('#projects-content');if(!projects.length){root.innerHTML='<article class="panel"><div class="empty-state"><strong>Todavía no hay proyectos estructurados</strong>Evalúa una necesidad para crear una propuesta con alcance, integraciones, fases e indicadores.<br><br><button class="btn primary" data-go="analysis">Iniciar evaluación →</button></div></article>';root.querySelector('[data-go]')?.addEventListener('click',()=>setView('analysis'));return;}root.innerHTML=projects.map(p=>`<article class="panel" style="margin-bottom:14px"><div class="panel-head"><div><div class="eyebrow">${escapeHTML(p.sector)} · ${escapeHTML(p.company)}</div><h2 class="project-title">${escapeHTML(p.title)}</h2><div class="panel-caption">${escapeHTML(p.status)} · ${new Date(p.createdAt).toLocaleDateString('es')}</div></div><div style="display:flex;align-items:center;gap:8px"><span class="tag ${band(p.score).key}">${escapeHTML(p.priority)}</span><button class="btn small" data-export-project="${escapeHTML(p.id)}">Exportar JSON</button></div></div><div class="panel-body"><div class="result-layout"><div><div class="eyebrow">Objetivo de intervención</div><p class="project-desc">${escapeHTML(p.objective)}</p><div class="outcome-grid"><div class="outcome"><span>Prioridad</span><b>${escapeHTML(p.priority)} · ${p.score}/100</b></div><div class="outcome"><span>Horizonte estimado</span><b>${escapeHTML(p.duration)}</b></div><div class="outcome"><span>Preparación inicial</span><b>${p.readiness*10}% · por validar</b></div></div><div class="section-gap"><div class="eyebrow">Indicadores de éxito sugeridos</div><div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:9px">${p.kpis.map(k=>`<span class="tag medium" style="text-transform:none;letter-spacing:0">${escapeHTML(k)}</span>`).join('')}</div></div><div class="section-gap"><div class="eyebrow">Integraciones a evaluar</div><div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:9px">${p.integrations.map(k=>`<span class="tag low" style="text-transform:none;letter-spacing:0">${escapeHTML(k)}</span>`).join('')}</div></div><p class="dim" style="font-size:9px;margin-top:14px">Propuesta orientativa. Validar con la empresa datos, presupuesto, seguridad, responsables y factibilidad antes de ejecutar o conectar sistemas.</p></div><div><div class="eyebrow" style="margin-bottom:12px">Fases de implementación</div><ol class="steps">${p.phases.map(ph=>`<li>${escapeHTML(ph[0])}<small>${escapeHTML(ph[1])}</small></li>`).join('')}</ol></div></div></div></article>`).join('');$$('[data-export-project]').forEach(b=>b.addEventListener('click',()=>{const p=projects.find(x=>x.id===b.dataset.exportProject);downloadJSON(p,`impactmind-${slug(p.company)}-proyecto.json`);}));}
-    function slug(s){return String(s||'empresa').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'empresa';}
-    function downloadJSON(data,name){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast('JSON exportado.');}
-    $('#export-all').addEventListener('click',()=>{if(!projects.length){toast('No hay proyectos que exportar.');return;}downloadJSON({generatedAt:new Date().toISOString(),disclaimer:'Propuestas de demostración; validar antes de implementar.',projects},'impactmind-portafolio.json');});
-    function drawChart(){const canvas=$('#trend-chart');if(!canvas)return;const box=canvas.getBoundingClientRect();const dpr=window.devicePixelRatio||1;canvas.width=Math.max(1,box.width*dpr);canvas.height=Math.max(1,box.height*dpr);const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);const w=box.width,h=box.height;ctx.clearRect(0,0,w,h);ctx.strokeStyle='#2b3630';ctx.lineWidth=1;for(let i=1;i<4;i++){const y=h*i/4;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}const vals=[30,36,33,48,43,55,51,63,59,70,65,74,68,83,78,89,80,94,88,96];const pts=vals.map((v,i)=>[i*w/(vals.length-1),h-12-v/110*(h-26)]);ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.strokeStyle='#b7e36a';ctx.lineWidth=2;ctx.stroke();const grad=ctx.createLinearGradient(0,0,0,h);grad.addColorStop(0,'#b7e36a25');grad.addColorStop(1,'#b7e36a00');ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();ctx.fillStyle=grad;ctx.fill();}
-    window.addEventListener('resize',drawChart);
-    $('#today').textContent=new Intl.DateTimeFormat('es',{weekday:'short',day:'numeric',month:'short'}).format(new Date());
-    renderOverview();renderProjects();syncRanges();
+    (() => {
+      const API_BASE = String(window.IMPACTMIND_CONFIG?.apiBase || '').replace(/\/$/, '');
+      const API = (path) => `${API_BASE}${path}`;
+      const FX_URL = 'https://api.frankfurter.dev/v2/rates?base=USD&quotes=EUR,MXN,COP,CLP,PEN,BRL';
+      const FX_REFRESH_MS = 60 * 60 * 1000;
+      const currencies = { EUR: 'Euro', MXN: 'Peso mexicano', COP: 'Peso colombiano', CLP: 'Peso chileno', PEN: 'Sol peruano', BRL: 'Real brasileño' };
+      const state = { companies: [], projects: [], sourceUnavailable: true, summary: null, analysis: null };
+      const $ = (selector, root = document) => root.querySelector(selector);
+      const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+      const esc = (value) => String(value ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+      const setText = (selector, value) => { const el = $(selector); if (el) el.textContent = value; };
+      function toast(message) { const root = $('#toast-root'); root.innerHTML = `<div class="toast">${esc(message)}</div>`; window.setTimeout(() => { root.innerHTML = ''; }, 3200); }
+      function setConnection(kind, label) { const el = $('#connection-status'); el.className = `connection ${kind}`; setText('#connection-label', label); setText('#sidebar-source', label); }
+      async function fetchJSON(url, options = {}) {
+        const response = await fetch(url, { ...options, headers: { 'Accept':'application/json', ...(options.body ? {'Content-Type':'application/json'} : {}), ...(options.headers || {}) }, cache:'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status} en ${url}`);
+        return response.json();
+      }
+      function formatDate(value) { if (!value) return '—'; const date = new Date(value); return Number.isNaN(date.getTime()) ? String(value) : new Intl.DateTimeFormat('es',{dateStyle:'medium',timeStyle:'short'}).format(date); }
+      function formatRate(value) { return new Intl.NumberFormat('es-419',{maximumSignificantDigits:7}).format(value); }
+      function className(value) { const normalized=String(value||'').toLowerCase(); return normalized.includes('crít')||normalized.includes('critic')?'critical':normalized.includes('alt')?'high':normalized.includes('med')?'medium':'low'; }
+      function normalizeItems(payload) { return Array.isArray(payload) ? payload : Array.isArray(payload?.items) ? payload.items : []; }
+      function setView(name) {
+        $$('.view').forEach(view => view.classList.toggle('active', view.id === `view-${name}`));
+        $$('.nav-btn').forEach(button => button.classList.toggle('active', button.dataset.view === name));
+        const labels={overview:'Resumen ejecutivo',companies:'Empresas',analysis:'Evaluar necesidad',projects:'Proyectos'};
+        setText('#crumb-current',labels[name]||'Resumen ejecutivo');
+      }
+      $$('[data-view]').forEach(button => button.addEventListener('click',()=>setView(button.dataset.view)));
+      $$('[data-go]').forEach(button => button.addEventListener('click',()=>setView(button.dataset.go)));
+
+      async function loadRates() {
+        const status=$('#fx-status'), list=$('#rates-list');
+        status.className='status-line'; status.textContent='Consultando cotizaciones publicadas…';
+        try {
+          const rates=normalizeItems(await fetchJSON(FX_URL));
+          if (!rates.length) throw new Error('La fuente no devolvió cotizaciones.');
+          list.innerHTML=rates.map(item=>`<div class="rate-row"><div><div class="rate-name">${esc(currencies[item.quote]||item.quote)}<span class="rate-code">${esc(item.quote)}</span></div><div class="rate-date">Publicada: ${esc(item.date)}</div></div><div class="rate-value">1 USD = ${esc(formatRate(item.rate))} ${esc(item.quote)}</div></div>`).join('');
+          const latest=rates.map(item=>item.date).sort().at(-1);
+          status.className='status-line ok'; status.textContent=`Datos recibidos · fecha más reciente ${latest} · consultado ${new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})}`;
+        } catch (error) {
+          list.innerHTML='<div class="rate-empty">La fuente de cambio no respondió. Comprueba la conexión y vuelve a intentar.</div>';
+          status.className='status-line error'; status.textContent='Cotizaciones no disponibles; no se sustituirán por valores inventados.';
+        }
+      }
+
+      function renderSummary(summary) {
+        state.summary=summary;
+        setText('#metric-companies',summary.companyCount ?? '—');
+        setText('#metric-critical',summary.criticalNeedCount ?? '—');
+        setText('#metric-projects',summary.projectCount ?? '—');
+        setText('#metric-updated',formatDate(summary.updatedAt));
+        setText('#updated-at',summary.updatedAt ? `Datos ${formatDate(summary.updatedAt)}` : 'Actualización no informada');
+        const signals=normalizeItems(summary.signals);
+        $('#business-signals').innerHTML=signals.length?signals.map(item=>`<div class="feed-item">${esc(item.title||item.message||'Señal empresarial')}<small>${esc(item.companyName||'Empresa')} · ${esc(item.source||'Backend')} · ${esc(item.updatedAt||'')}</small></div>`).join(''):'<div class="empty-state"><strong>Sin señales recientes</strong>El backend no reportó alertas empresariales.</div>';
+      }
+      function renderCompanies(filter='') {
+        const query=filter.trim().toLocaleLowerCase('es');
+        const items=state.companies.filter(company=>`${company.name||''} ${company.sector||''}`.toLocaleLowerCase('es').includes(query));
+        $('#companies-table').innerHTML=items.length?items.map(company=>`<tr><td><span class="table-company">${esc(company.name)}</span><div class="dim" style="font-size:9px;margin-top:3px">${esc(company.needSummary||'')}</div></td><td>${esc(company.sector||'—')}</td><td><span class="tag ${className(company.needClass)}">${esc(company.needClass||'Sin clasificar')}</span></td><td class="mono">${company.needScore==null?'—':`${esc(company.needScore)}/100`}</td><td class="dim">${esc(formatDate(company.updatedAt))}</td><td><button class="btn small" data-company="${esc(company.id)}">Evaluar →</button></td></tr>`).join(''):'<tr><td colspan="6"><div class="empty-state"><strong>Sin empresas recibidas</strong>La API debe responder con empresas reales para mostrarlas aquí.</div></td></tr>';
+        $$('[data-company]').forEach(button=>button.addEventListener('click',()=>{ $('#company-select').value=button.dataset.company; setView('analysis'); }));
+        $('#company-count-nav').textContent=state.sourceUnavailable?'—':String(state.companies.length);
+        const select=$('#company-select');
+        select.innerHTML=items.length?items.map(company=>`<option value="${esc(company.id)}">${esc(company.name)}</option>`).join(''):'<option value="">Sin empresas disponibles</option>';
+        select.disabled=!items.length;
+        $('#run-analysis').disabled=!items.length;
+        setText('#analysis-help',items.length?'La prioridad, las causas y la evidencia procederán del endpoint de análisis.':'El análisis se habilitará cuando GET /api/companies devuelva empresas reales.');
+      }
+      function renderProjects() {
+        const root=$('#projects-content');
+        if (!state.projects.length) { root.innerHTML='<article class="panel"><div class="empty-state"><strong>Sin proyectos recibidos</strong>Los planes aparecerán cuando GET /api/projects devuelva registros reales.</div></article>'; $('#project-count-nav').textContent=state.sourceUnavailable?'—':'0'; return; }
+        $('#project-count-nav').textContent=String(state.projects.length);
+        root.innerHTML=state.projects.map(project=>`<article class="panel" style="margin-bottom:14px"><div class="panel-head"><div><div class="eyebrow">${esc(project.companyName||project.company||'Empresa')} · ${esc(project.sector||'')}</div><h2 class="project-title">${esc(project.title||project.name||'Proyecto')}</h2><div class="panel-caption">${esc(project.status||'Pendiente de revisión')} · ${esc(formatDate(project.updatedAt||project.createdAt))}</div></div><button class="btn small" data-export="${esc(project.id)}">Exportar JSON</button></div><div class="panel-body"><div class="result-layout"><div><div class="eyebrow">Problema y objetivo</div><p class="project-desc">${esc(project.objective||project.summary||project.problem||'Sin descripción')}</p><div class="project-meta"><span>Prioridad: ${esc(project.priority||'—')}</span><span>Puntuación: ${project.score==null?'—':`${esc(project.score)}/100`}</span><span>Duración: ${esc(project.duration||'Por definir')}</span></div><div class="eyebrow">Indicadores</div><p class="project-desc">${esc((project.kpis||[]).join(' · ')||'No informados')}</p><div class="eyebrow">Integraciones a validar</div><p class="project-desc">${esc((project.integrations||[]).join(' · ')||'No informadas')}</p><p class="panel-caption">El sistema no ejecuta el proyecto automáticamente. La ejecución debe estar autorizada y controlada por el backend.</p></div><div><div class="eyebrow" style="margin-bottom:12px">Fases recibidas del backend</div><ol class="steps">${(project.phases||[]).map(phase=>`<li>${esc(typeof phase==='string'?phase:phase.title||phase.name)}<small>${esc(typeof phase==='string'?'':phase.description||'')}</small></li>`).join('')||'<li>El backend todavía no devolvió fases.</li>'}</ol></div></div></div></article>`).join('');
+        $$('[data-export]').forEach(button=>button.addEventListener('click',()=>{const project=state.projects.find(item=>String(item.id)===button.dataset.export);downloadJSON(project,`impactmind-${slug(project.companyName||project.company||'proyecto')}.json`);}));
+      }
+      function slug(value){return String(value||'proyecto').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'proyecto';}
+      function downloadJSON(data,name){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const anchor=document.createElement('a');anchor.href=url;anchor.download=name;document.body.appendChild(anchor);anchor.click();anchor.remove();URL.revokeObjectURL(url);toast('JSON exportado.');}
+
+      async function loadBusinessData() {
+        setConnection('', 'Comprobando base de datos');
+        $('#sourceUnavailable').classList.remove('hidden'); $('#sourceConnected').classList.add('hidden');
+        try {
+          const [summary,companies,projects]=await Promise.all([
+            fetchJSON(API('/api/analytics/summary')),
+            fetchJSON(API('/api/companies')),
+            fetchJSON(API('/api/projects'))
+          ]);
+          state.sourceUnavailable=false; state.companies=normalizeItems(companies); state.projects=normalizeItems(projects);
+          renderSummary(summary); renderCompanies($('#company-search').value); renderProjects();
+          $('#sourceUnavailable').classList.add('hidden'); $('#sourceConnected').classList.remove('hidden');
+          setConnection('ok','Base conectada');
+          setText('#companies-caption',`${state.companies.length} registros recibidos desde /api/companies`);
+          setText('#metric-companies-note','Datos recibidos del backend');
+        } catch (error) {
+          state.sourceUnavailable=true; state.companies=[]; state.projects=[];
+          ['#metric-companies','#metric-critical','#metric-projects','#metric-updated','#updated-at'].forEach(selector=>setText(selector,'—'));
+          setText('#metric-companies-note','Sin respuesta del backend');
+          setConnection('error','Base sin conectar');
+          $('#sourceUnavailable').classList.remove('hidden'); $('#sourceConnected').classList.add('hidden');
+          $('#companies-table').innerHTML='<tr><td colspan="6"><div class="empty-state"><strong>Conecta tu base de datos</strong>GET /api/companies no está disponible.</div></td></tr>';
+          setText('#companies-caption','Backend no conectado');
+          $('#company-count-nav').textContent='—'; $('#project-count-nav').textContent='—';
+          $('#company-select').innerHTML='<option value="">Conecta tu base de datos primero</option>'; $('#company-select').disabled=true; $('#run-analysis').disabled=true;
+          renderProjects();
+        }
+      }
+      function renderAnalysis(analysis) {
+        state.analysis=analysis;
+        const evidence=normalizeItems(analysis.evidence);
+        const project=analysis.project;
+        $('#analysis-result').innerHTML=`<div class="class-top"><div><div class="eyebrow">Clasificación recibida del backend</div><span class="tag ${className(analysis.priority)}">${esc(analysis.priority||'Sin clasificar')}</span></div><div class="mono" style="font-size:24px">${analysis.score==null?'—':`${esc(analysis.score)}/100`}</div></div><p class="project-desc" style="margin-top:13px">${esc(analysis.summary||'El servicio no devolvió un resumen.')}</p><div class="eyebrow" style="margin-top:16px">Evidencia y fuentes</div><div class="feed">${evidence.map(item=>`<div class="feed-item">${esc(item.label||item.name||'Dato')} · ${esc(item.value??'—')}<small>Fuente: ${esc(item.source||'No informada')} · ${esc(item.updatedAt||'')}</small></div>`).join('')||'<div class="panel-caption">El servicio no devolvió evidencia detallada.</div>'}</div>${project?`<div class="panel section-gap"><div class="panel-head"><div><h3 class="panel-title">Propuesta generada con los datos analizados</h3><div class="panel-caption">Revísala antes de guardarla</div></div></div><div class="panel-body"><h3 class="project-title">${esc(project.title||project.name||'Proyecto')}</h3><p class="project-desc">${esc(project.objective||project.summary||'')}</p><button class="btn primary" id="save-project" data-analysis-id="${esc(analysis.id)}">Guardar proyecto en la base</button></div></div>`:''}`;
+        $('#save-project')?.addEventListener('click',saveProject);
+      }
+      async function runAnalysis(event) {
+        event.preventDefault();
+        if(state.sourceUnavailable) { toast('Conecta primero la base de datos.'); return; }
+        const companyId=$('#company-select').value;
+        if(!companyId) { toast('Selecciona una empresa recibida del backend.'); return; }
+        const button=$('#run-analysis'); button.disabled=true; button.textContent='Consultando datos empresariales…';
+        try {
+          const analysis=await fetchJSON(API(`/api/companies/${encodeURIComponent(companyId)}/analysis`),{method:'POST',body:JSON.stringify({question:$('#problem-input').value.trim()})});
+          renderAnalysis(analysis); toast('Análisis recibido desde el backend.');
+        } catch(error) { $('#analysis-result').innerHTML='<div class="empty-state"><strong>No se pudo obtener el análisis real</strong>Revisa el endpoint POST /api/companies/{id}/analysis y la conexión del servidor.</div>'; }
+        finally {button.disabled=!state.companies.length;button.textContent='Analizar con datos reales →';}
+      }
+      async function saveProject(event) {
+        const button=event.currentTarget; const companyId=$('#company-select').value; const analysisId=button.dataset.analysisId;
+        button.disabled=true; button.textContent='Guardando…';
+        try {
+          await fetchJSON(API(`/api/companies/${encodeURIComponent(companyId)}/projects`),{method:'POST',body:JSON.stringify({analysisId})});
+          toast('Proyecto guardado en la base.'); await loadBusinessData(); setView('projects');
+        } catch(error) { toast('No se guardó: verifica POST /api/companies/{id}/projects.'); button.disabled=false; button.textContent='Guardar proyecto en la base'; }
+      }
+      function wireEvents(){
+        $('#analysis-form').addEventListener('submit',runAnalysis);
+        $('#company-search').addEventListener('input',event=>renderCompanies(event.target.value));
+        $('#refresh-all').addEventListener('click',()=>{loadRates();loadBusinessData();});
+        $('#refresh-rates').addEventListener('click',loadRates);
+        $('#refresh-companies').addEventListener('click',loadBusinessData);
+        $('#refresh-projects').addEventListener('click',loadBusinessData);
+      }
+      wireEvents(); loadRates(); loadBusinessData();
+      window.setInterval(loadRates,FX_REFRESH_MS);
+      window.setInterval(loadBusinessData,5*60*1000);
+    })();
   </script>
 </body>
 </html>
